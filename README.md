@@ -37,16 +37,24 @@ Building intelligent platforms with AWS, Terraform & AI-powered observability
 
 <table>
 <tr>
-<td width="50%">
+<td colspan="2">
 
-### 🚢 **Drupal on AWS with ECS & EFS**
-**Complete infrastructure-as-code deployment of Drupal 11**
-- **Architecture**: Modular Terraform, Docker, ECS Fargate, RDS, EFS
-- **Business Impact**: Improved deployment efficiency and cost optimization
-- **Production Features**: Zero-downtime deployments, auto-scaling capabilities
-- **[Repository →](https://github.com/deepakaryan1988/Drupal-AWS)**
+<div align="center">
+
+### 📝 **FeedbackHub on AWS**
+**Full-stack microservice-ready feedback platform with AI integration**
+
+**Technology Stack**: Next.js, MongoDB Atlas, AWS ECS Fargate, GitHub Actions  
+**AI Integration**: AWS Bedrock for intelligent feedback analysis and observability  
+**Deployment Strategy**: Blue/Green deployment with zero-downtime releases  
+**AI-Powered Observability**: 60% faster MTTR with AWS Bedrock log summarization  
+**[Repository →](https://github.com/deepakaryan1988/feedbackhub-on-awsform)**
+
+</div>
 
 </td>
+</tr>
+<tr>
 <td width="50%">
 
 ### 🧱 **Appwrite on AWS**
@@ -57,17 +65,14 @@ Building intelligent platforms with AWS, Terraform & AI-powered observability
 - **[Repository →](https://github.com/deepakaryan1988/appwrite-on-aws)**
 
 </td>
-</tr>
-<tr>
-<td colspan="2">
+<td width="50%">
 
-### 📝 **FeedbackHub on AWS**
-**Full-stack microservice-ready feedback platform with AI integration**
-- **Technology Stack**: Next.js, MongoDB Atlas, AWS ECS Fargate, GitHub Actions
-- **AI Integration**: AWS Bedrock for intelligent feedback analysis and observability
-- **Deployment Strategy**: Blue/Green deployment with zero-downtime releases
-- **AI-Powered Observability**: 60% faster MTTR with AWS Bedrock log summarization
-- **[Repository →](https://github.com/deepakaryan1988/feedbackhub-on-awsform)**
+### 🚢 **Drupal on AWS with ECS & EFS**
+**Complete infrastructure-as-code deployment of Drupal 11**
+- **Architecture**: Modular Terraform, Docker, ECS Fargate, RDS, EFS
+- **Business Impact**: Improved deployment efficiency and cost optimization
+- **Production Features**: Zero-downtime deployments, auto-scaling capabilities
+- **[Repository →](https://github.com/deepakaryan1988/Drupal-AWS)**
 
 </td>
 </tr>
