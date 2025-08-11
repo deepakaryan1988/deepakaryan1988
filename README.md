@@ -29,7 +29,7 @@ I **build in public** → code on GitHub, write on Hashnode.
 | **🧱 Appwrite on AWS** | Secure BaaS with AI integrations, Redis cache, Postgres | ![Appwrite](https://img.shields.io/badge/Appwrite-F02E65?logo=appwrite) ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-336791?logo=postgresql) ![Redis](https://img.shields.io/badge/Redis-DC382D?logo=redis) ![AWS](https://img.shields.io/badge/AWS-232F3E?logo=amazon-aws) | Security • GitOps • FinOps | 🔗 [Repo](https://github.com/deepakaryan1988/appwrite-on-aws) |
 | **🚢 Drupal on AWS** | Drupal 11 IaC with ECS Fargate + RDS + EFS | ![Drupal](https://img.shields.io/badge/Drupal-0678BE?logo=drupal) ![Docker](https://img.shields.io/badge/Docker-2496ED?logo=docker) ![Terraform](https://img.shields.io/badge/Terraform-7B42BC?logo=terraform) ![AWS](https://img.shields.io/badge/AWS-232F3E?logo=amazon-aws) | IaC • Scaling • Cost Opt | 🔗 [Repo](https://github.com/deepakaryan1988/Drupal-AWS) |
 
-> 👉 **View all**: [github.com/deepakaryan1988?tab=repositories](https://github.com/deepakaryan1988?tab=repositories)
+> 👉 [![All Projects](https://img.shields.io/badge/All_Projects-view-blue?logo=github)](https://github.com/deepakaryan1988?tab=repositories)
 
 ---
 
