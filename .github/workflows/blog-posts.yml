@@ -1,7 +1,7 @@
 name: Update README – Blog Posts
 on:
   schedule:
-    - cron: "0 */12 * * *"
+    - cron: "0 */24 * * *"
   workflow_dispatch:
 permissions:
   contents: write
@@ -13,6 +13,8 @@ jobs:
       - uses: gautamkrishnar/blog-post-workflow@v1
         with:
           max_post_count: 5
-          feed_list: "https://debugdeploygrow.hashnode.dev/rss.xml,https://debugdeploygrow.hashnode.dev/feed.xml"
-          retry_count: 3
-          retry_wait_time: 60
+          feed_list: "https://debugdeploygrow.hashnode.dev/rss.xml"
+          retry_count: 5
+          retry_wait_time: 120
+          user_agent: "Mozilla/5.0 (compatible; GitHub-Actions-Bot/1.0)"
+          accept_header: "application/rss+xml, application/xml, text/xml, */*"
