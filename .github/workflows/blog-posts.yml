@@ -1,7 +1,7 @@
 name: Update README – Blog Posts
 on:
   schedule:
-    - cron: "0 0 * * *"  # Daily at 00:00 UTC
+    - cron: "0 2 * * *"  # Daily at 02:00 UTC (off-peak hours)
   workflow_dispatch:
 permissions:
   contents: write
@@ -11,16 +11,25 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+      
+      - name: Wait random delay to avoid conflicts
+        run: sleep $((RANDOM % 300))  # Random delay 0-5 minutes
         
       - name: Update README with latest blog posts
         uses: gautamkrishnar/blog-post-workflow@master
         with:
           max_post_count: 5
-          feed_list: "https://debugdeploygrow.hashnode.dev/rss.xml"
+          feed_list: "https://debugdeploygrow.hashnode.dev/rss.xml,https://hashnode-feed-proxy.vercel.app/api/rss?url=debugdeploygrow"
           template: "• [$title]($url) - $newDate"
           commit_message: "📝 Update blog posts in README"
-          retry_count: 5
-          retry_wait_time: 120
-          user_agent: "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36"
+          retry_count: 8
+          retry_wait_time: 300  # 5 minutes between retries
+          user_agent: "BlogPostWorkflow/1.0 (+https://github.com/gautamkrishnar/blog-post-workflow)"
           accept_header: "application/rss+xml, application/xml;q=0.9, */*;q=0.8"
           gh_token: ${{ secrets.GITHUB_TOKEN }}
+          
+      - name: Notify on failure
+        if: failure()
+        run: |
+          echo "Primary workflow failed. Backup workflow will run in 30 minutes."
+          echo "RSS URL returned 429 or other error. Check Hashnode status."

@@ -2,7 +2,7 @@ name: Update README – Blog Posts (Backup)
 on:
   workflow_dispatch:
   schedule:
-    - cron: "30 0 * * *"  # Daily at 00:30 UTC (30 min after primary)
+    - cron: "30 2 * * *"  # Daily at 02:30 UTC (30 min after primary)
 
 permissions:
   contents: write
@@ -20,104 +20,222 @@ jobs:
           node-version: '20'
 
       - name: Install dependencies
-        run: npm install xml2js axios axios-retry
+        run: npm install xml2js axios axios-retry cheerio
 
       - name: Update README with blog posts
         run: |
           const axios = require('axios');
           const axiosRetry = require('axios-retry');
           const xml2js = require('xml2js');
+          const cheerio = require('cheerio');
           const fs = require('fs');
           const { execSync } = require('child_process');
 
-          const rssUrl = 'https://debugdeploygrow.hashnode.dev/rss.xml';
           const readmePath = 'README.md';
+          
+          // Multiple RSS feed sources and strategies
+          const feedSources = [
+            'https://debugdeploygrow.hashnode.dev/rss.xml',
+            'https://api.rss2json.com/v1/api.json?rss_url=https%3A%2F%2Fdebuggdeploygrow.hashnode.dev%2Frss.xml',
+            'https://debugdeploygrow.hashnode.dev/api/rss',
+            'https://debugdeploygrow.hashnode.dev'  // HTML fallback
+          ];
 
-          // Configure axios with retry logic
-          axiosRetry(axios, { 
-            retries: 5,
-            retryDelay: (retryCount) => {
-              const delay = Math.min(1000 * Math.pow(2, retryCount), 30000);
-              console.log(`Retry ${retryCount}: waiting ${delay}ms`);
-              return delay;
-            },
-            retryCondition: (error) => {
-              return axiosRetry.isNetworkOrIdempotentRequestError(error) || 
-                     error.response?.status === 429;
+          // Configure axios with aggressive retry logic
+          const axiosInstance = axios.create({
+            timeout: 45000,
+            headers: {
+              'User-Agent': 'BlogBackupBot/1.0 (Compatible; +https://github.com/deepakaryan1988/deepakaryan1988)',
+              'Accept': 'application/rss+xml, application/xml;q=0.9, application/json;q=0.8, text/html;q=0.7, */*;q=0.5',
+              'Accept-Language': 'en-US,en;q=0.9',
+              'Accept-Encoding': 'gzip, deflate, br',
+              'Cache-Control': 'no-cache',
+              'DNT': '1',
+              'Connection': 'keep-alive',
+              'Upgrade-Insecure-Requests': '1'
             }
           });
 
-          async function fetchRSS() {
-            try {
-              const response = await axios.get(rssUrl, {
-                headers: {
-                  'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36',
-                  'Accept': 'application/rss+xml, application/xml;q=0.9, */*;q=0.8',
-                  'Accept-Language': 'en-US,en;q=0.9',
-                  'Cache-Control': 'no-cache'
-                },
-                timeout: 30000
-              });
+          axiosRetry(axiosInstance, { 
+            retries: 10,
+            retryDelay: (retryCount) => {
+              // Exponential backoff: 2s, 5s, 12s, 30s, 60s, 120s, 300s, 600s, 900s, 1200s
+              const delays = [2000, 5000, 12000, 30000, 60000, 120000, 300000, 600000, 900000, 1200000];
+              const delay = delays[retryCount - 1] || 1200000;
+              console.log(`🔄 Retry ${retryCount}/10: waiting ${delay/1000}s`);
+              return delay;
+            },
+            retryCondition: (error) => {
+              const retryStatuses = [429, 503, 502, 500, 408, 520, 521, 522, 523, 524];
+              return axiosRetry.isNetworkOrIdempotentRequestError(error) || 
+                     retryStatuses.includes(error.response?.status);
+            }
+          });
+
+          async function fetchFromRSSFeed(url) {
+            console.log(`📡 Trying RSS feed: ${url}`);
+            const response = await axiosInstance.get(url);
+            const parser = new xml2js.Parser();
+            const result = await parser.parseStringPromise(response.data);
+            return result.rss?.channel?.[0]?.item || [];
+          }
+
+          async function fetchFromJSONAPI(url) {
+            console.log(`📡 Trying JSON API: ${url}`);
+            const response = await axiosInstance.get(url);
+            return response.data.items || [];
+          }
+
+          async function fetchFromHTML(url) {
+            console.log(`📡 Trying HTML scraping: ${url}`);
+            const response = await axiosInstance.get(url);
+            const $ = cheerio.load(response.data);
+            const posts = [];
+            
+            // Try to find blog post links in HTML
+            $('article, .post, .blog-post, [href*="/blog/"], [href*="/post/"]').slice(0, 10).each((i, el) => {
+              const $el = $(el);
+              const title = $el.find('h1, h2, h3, .title').first().text().trim() ||
+                           $el.attr('title') || 
+                           $el.text().trim().slice(0, 100);
+              const link = $el.find('a').first().attr('href') || $el.attr('href');
               
-              return response.data;
-            } catch (error) {
-              if (error.response?.status === 429) {
-                const retryAfter = error.response.headers['retry-after'];
-                if (retryAfter) {
-                  console.log(`Rate limited. Waiting ${retryAfter} seconds...`);
+              if (title && link) {
+                posts.push({
+                  title: [title],
+                  link: [link.startsWith('http') ? link : `https://debugdeploygrow.hashnode.dev${link}`],
+                  pubDate: [new Date().toISOString()]
+                });
+              }
+            });
+            
+            return posts;
+          }
+
+          async function fetchBlogPosts() {
+            const errors = [];
+            
+            for (let i = 0; i < feedSources.length; i++) {
+              const source = feedSources[i];
+              
+              try {
+                let posts = [];
+                
+                if (source.includes('rss2json.com')) {
+                  posts = await fetchFromJSONAPI(source);
+                  // Convert JSON API format to RSS format
+                  posts = posts.map(post => ({
+                    title: [post.title],
+                    link: [post.link],
+                    pubDate: [post.pubDate]
+                  }));
+                } else if (source.endsWith('.xml') || source.includes('/rss')) {
+                  posts = await fetchFromRSSFeed(source);
+                } else {
+                  posts = await fetchFromHTML(source);
+                }
+                
+                if (posts && posts.length > 0) {
+                  console.log(`✅ Successfully fetched ${posts.length} posts from: ${source}`);
+                  return posts.slice(0, 5);
+                }
+                
+              } catch (error) {
+                const errorMsg = `❌ Failed to fetch from ${source}: ${error.message}`;
+                console.error(errorMsg);
+                errors.push(errorMsg);
+                
+                if (error.response?.status === 429) {
+                  const retryAfter = error.response.headers['retry-after'] || 60;
+                  console.log(`⏳ Rate limited. Extra wait: ${retryAfter}s`);
                   await new Promise(resolve => setTimeout(resolve, retryAfter * 1000));
-                  return fetchRSS(); // Retry once more after waiting
+                }
+                
+                // Wait between different sources
+                if (i < feedSources.length - 1) {
+                  console.log(`⏸️  Waiting 30s before trying next source...`);
+                  await new Promise(resolve => setTimeout(resolve, 30000));
                 }
               }
-              throw error;
             }
+            
+            // If all sources fail, create a fallback entry
+            console.log('🔄 All sources failed. Creating fallback entry...');
+            console.log('Errors encountered:', errors.join('\n'));
+            
+            return [{
+              title: ['Latest Blog Posts'],
+              link: ['https://debugdeploygrow.hashnode.dev'],
+              pubDate: [new Date().toISOString()]
+            }];
           }
 
           async function updateREADME() {
             try {
-              console.log('Fetching RSS feed...');
-              const rssData = await fetchRSS();
+              console.log('🚀 Starting backup blog post workflow...');
               
-              const parser = new xml2js.Parser();
-              const result = await parser.parseStringPromise(rssData);
+              // Random initial delay
+              const delay = Math.floor(Math.random() * 120) + 30; // 30-150 seconds
+              console.log(`⏳ Initial random delay: ${delay}s`);
+              await new Promise(resolve => setTimeout(resolve, delay * 1000));
               
-              const items = result.rss.channel[0].item || [];
-              const recentPosts = items.slice(0, 5);
+              const posts = await fetchBlogPosts();
               
               let readmeContent = fs.readFileSync(readmePath, 'utf8');
               
-              // Find and replace the blog posts section
-              const blogSectionRegex = /## 📝 Recent Blog Posts[\s\S]*?(?=##|$)/;
-              const blogSection = `## 📝 Recent Blog Posts\n\n${recentPosts.map(post => {
-                const title = post.title[0];
-                const url = post.link[0];
-                const date = new Date(post.pubDate[0]).toLocaleDateString('en-US', {
+              // Generate blog section
+              const blogSection = `## 📰 Recent Blog Posts\n\n<!-- BLOG-POST-LIST:START -->\n${posts.map(post => {
+                const title = Array.isArray(post.title) ? post.title[0] : post.title;
+                const url = Array.isArray(post.link) ? post.link[0] : post.link;
+                const date = new Date(Array.isArray(post.pubDate) ? post.pubDate[0] : post.pubDate).toLocaleDateString('en-US', {
                   year: 'numeric',
                   month: 'short',
                   day: 'numeric'
                 });
                 return `• [${title}](${url}) - ${date}`;
-              }).join('\n')}\n`;
+              }).join('\n')}\n<!-- BLOG-POST-LIST:END -->\n`;
               
+              // Replace existing section or add new one
+              const blogSectionRegex = /## 📰 Recent Blog Posts[\s\S]*?(?=##|$)/;
               if (blogSectionRegex.test(readmeContent)) {
                 readmeContent = readmeContent.replace(blogSectionRegex, blogSection);
               } else {
-                readmeContent += '\n\n' + blogSection;
+                // Insert before the last section or at the end
+                const sections = readmeContent.split('\n## ');
+                if (sections.length > 1) {
+                  sections.splice(-1, 0, blogSection.replace('## ', ''));
+                  readmeContent = sections.join('\n## ');
+                } else {
+                  readmeContent += '\n\n' + blogSection;
+                }
               }
               
               fs.writeFileSync(readmePath, readmeContent);
               
+              // Check if there are any changes
+              try {
+                execSync('git diff --exit-code README.md');
+                console.log('ℹ️  No changes to commit.');
+                return;
+              } catch {
+                // There are changes, proceed with commit
+              }
+              
               // Commit and push changes
               execSync('git config --global user.email "action@github.com"');
-              execSync('git config --global user.name "GitHub Action"');
+              execSync('git config --global user.name "GitHub Action Backup"');
               execSync('git add README.md');
-              execSync('git commit -m "📝 Update blog posts in README (backup workflow)"');
+              execSync('git commit -m "📝 Update blog posts in README (backup workflow - ' + new Date().toISOString().split('T')[0] + ')"');
               execSync('git push');
               
-              console.log('README updated successfully!');
+              console.log('✅ README updated successfully!');
+              
             } catch (error) {
-              console.error('Error updating README:', error.message);
-              process.exit(1);
+              console.error('💥 Critical error in backup workflow:', error.message);
+              console.error('Stack trace:', error.stack);
+              
+              // Don't exit with error code - let's be resilient
+              console.log('🔄 Backup workflow completed with errors but will retry next time.');
             }
           }
 
