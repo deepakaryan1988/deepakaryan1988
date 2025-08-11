@@ -1,7 +1,7 @@
 name: Update README – Blog Posts
 on:
   schedule:
-    - cron: "0 */24 * * *"
+    - cron: "0 0 * * *"  # Daily at 00:00 UTC
   workflow_dispatch:
 permissions:
   contents: write
@@ -9,12 +9,18 @@ jobs:
   update-readme-with-blog:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: gautamkrishnar/blog-post-workflow@v1
+      - name: Checkout
+        uses: actions/checkout@v4
+        
+      - name: Update README with latest blog posts
+        uses: gautamkrishnar/blog-post-workflow@master
         with:
           max_post_count: 5
           feed_list: "https://debugdeploygrow.hashnode.dev/rss.xml"
+          template: "• [$title]($url) - $newDate"
+          commit_message: "📝 Update blog posts in README"
           retry_count: 5
           retry_wait_time: 120
-          user_agent: "Mozilla/5.0 (compatible; GitHub-Actions-Bot/1.0)"
-          accept_header: "application/rss+xml, application/xml, text/xml, */*"
+          user_agent: "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36"
+          accept_header: "application/rss+xml, application/xml;q=0.9, */*;q=0.8"
+          gh_token: ${{ secrets.GITHUB_TOKEN }}

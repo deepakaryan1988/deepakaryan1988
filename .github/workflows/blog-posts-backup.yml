@@ -1,0 +1,140 @@
+name: Update README – Blog Posts (Backup)
+on:
+  schedule:
+    - cron: "0 18 * * *"  # Daily at 6 PM UTC
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  update-readme-with-blog-backup:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'workflow_dispatch' || github.event_name == 'schedule'
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          
+      - name: Install dependencies
+        run: npm install xml2js axios axios-retry
+        
+      - name: Parse RSS and update README
+        run: |
+          cat > update-blog.js << 'EOF'
+          const fs = require('fs');
+          const axios = require('axios');
+          const axiosRetry = require('axios-retry');
+          const xml2js = require('xml2js');
+          
+          const rssUrl = 'https://debugdeploygrow.hashnode.dev/rss.xml';
+          const readmePath = 'README.md';
+          
+          const client = axios.create({
+            timeout: 20000,
+            headers: {
+              'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36',
+              'Accept': 'application/rss+xml, application/xml;q=0.9, */*;q=0.8',
+              'Accept-Language': 'en-US,en;q=0.9'
+            },
+            validateStatus: () => true
+          });
+
+          axiosRetry(client, {
+            retries: 5,
+            retryCondition: (error) => {
+              const status = error.response?.status;
+              return axiosRetry.isNetworkOrIdempotentRequestError(error) || status === 429 || (status >= 500 && status < 600);
+            },
+            retryDelay: (retryCount, error) => {
+              const status = error.response?.status;
+              // Honor Retry-After when 429
+              const retryAfter = error.response?.headers?.['retry-after'];
+              if (status === 429 && retryAfter) {
+                const secs = parseInt(retryAfter, 10);
+                if (!Number.isNaN(secs)) return secs * 1000;
+              }
+              return Math.min(60000, 1000 * Math.pow(2, retryCount));
+            }
+          });
+
+          async function fetchRSS() {
+            const res = await client.get(rssUrl, { responseType: 'text' });
+            if (res.status !== 200) {
+              throw new Error(`HTTP ${res.status}`);
+            }
+            return res.data;
+          }
+          
+          async function updateREADME() {
+            try {
+              console.log('Fetching RSS feed...');
+              const rssData = await fetchRSS();
+              
+              console.log('Parsing XML...');
+              const parser = new xml2js.Parser();
+              const result = await parser.parseStringPromise(rssData);
+              
+              if (!result.rss || !result.rss.channel || !result.rss.channel[0].item) {
+                throw new Error('Invalid RSS format');
+              }
+              
+              const items = result.rss.channel[0].item.slice(0, 5);
+              console.log(`Found ${items.length} blog posts`);
+              
+              // Read current README
+              let readmeContent = fs.readFileSync(readmePath, 'utf8');
+              
+              // Generate blog post list
+              let blogList = '';
+              items.forEach(item => {
+                const title = item.title[0];
+                const link = item.link[0];
+                const pubDate = new Date(item.pubDate[0]).toLocaleDateString('en-US', {
+                  year: 'numeric',
+                  month: 'short',
+                  day: 'numeric'
+                });
+                blogList += `• [${title}](${link}) - ${pubDate}\n`;
+              });
+              
+              // Replace content between markers
+              const startMarker = '<!-- BLOG-POST-LIST:START -->';
+              const endMarker = '<!-- BLOG-POST-LIST:END -->';
+              
+              const startIndex = readmeContent.indexOf(startMarker);
+              const endIndex = readmeContent.indexOf(endMarker);
+              
+              if (startIndex === -1 || endIndex === -1) {
+                throw new Error('Blog post markers not found in README');
+              }
+              
+              const beforeContent = readmeContent.substring(0, startIndex + startMarker.length);
+              const afterContent = readmeContent.substring(endIndex);
+              
+              const newContent = beforeContent + '\n' + blogList + '\n' + afterContent;
+              
+              // Write updated README
+              fs.writeFileSync(readmePath, newContent);
+              console.log('✅ README updated successfully');
+              
+            } catch (error) {
+              console.error('❌ Error:', error.message);
+              process.exit(1);
+            }
+          }
+          
+          updateREADME();
+          EOF
+          
+          node update-blog.js
+          
+      - name: Commit and push changes
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add README.md
+          git diff --quiet && git diff --staged --quiet || git commit -m "📝 Update blog posts via backup workflow"
+          git push
