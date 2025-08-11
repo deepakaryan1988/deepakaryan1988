@@ -159,15 +159,11 @@ jobs:
               }
             }
             
-            // If all sources fail, create a fallback entry
-            console.log('🔄 All sources failed. Creating fallback entry...');
+            // If all sources fail, return empty array to hide section
+            console.log('❌ All sources failed. Blog section will be hidden.');
             console.log('Errors encountered:', errors.join('\n'));
             
-            return [{
-              title: ['Latest Blog Posts'],
-              link: ['https://debugdeploygrow.hashnode.dev'],
-              pubDate: [new Date().toISOString()]
-            }];
+            return [];
           }
 
           async function updateREADME() {
@@ -183,31 +179,55 @@ jobs:
               
               let readmeContent = fs.readFileSync(readmePath, 'utf8');
               
-              // Generate blog section
-              const blogSection = `## 📰 Recent Blog Posts\n\n<!-- BLOG-POST-LIST:START -->\n${posts.map(post => {
-                const title = Array.isArray(post.title) ? post.title[0] : post.title;
-                const url = Array.isArray(post.link) ? post.link[0] : post.link;
-                const date = new Date(Array.isArray(post.pubDate) ? post.pubDate[0] : post.pubDate).toLocaleDateString('en-US', {
-                  year: 'numeric',
-                  month: 'short',
-                  day: 'numeric'
-                });
-                return `• [${title}](${url}) - ${date}`;
-              }).join('\n')}\n<!-- BLOG-POST-LIST:END -->\n`;
+              // Check if we have valid blog posts (not just fallback)
+              const hasValidPosts = posts.length > 0 && 
+                                  !(posts.length === 1 && posts[0].title[0] === 'Latest Blog Posts');
               
-              // Replace existing section or add new one
-              const blogSectionRegex = /## 📰 Recent Blog Posts[\s\S]*?(?=##|$)/;
-              if (blogSectionRegex.test(readmeContent)) {
-                readmeContent = readmeContent.replace(blogSectionRegex, blogSection);
-              } else {
-                // Insert before the last section or at the end
-                const sections = readmeContent.split('\n## ');
-                if (sections.length > 1) {
-                  sections.splice(-1, 0, blogSection.replace('## ', ''));
-                  readmeContent = sections.join('\n## ');
+              // Current blog section regex
+              const blogSectionRegex = /## 📰 Recent Blog Posts[\s\S]*?(?=##|---|$)/;
+              const hasBlogSection = blogSectionRegex.test(readmeContent);
+              
+              if (hasValidPosts) {
+                console.log(`✅ Found ${posts.length} valid blog posts - showing section`);
+                
+                // Generate blog section
+                const blogSection = `## 📰 Recent Blog Posts\n\n<!-- BLOG-POST-LIST:START -->\n${posts.map(post => {
+                  const title = Array.isArray(post.title) ? post.title[0] : post.title;
+                  const url = Array.isArray(post.link) ? post.link[0] : post.link;
+                  const date = new Date(Array.isArray(post.pubDate) ? post.pubDate[0] : post.pubDate).toLocaleDateString('en-US', {
+                    year: 'numeric',
+                    month: 'short',
+                    day: 'numeric'
+                  });
+                  return `• [${title}](${url}) - ${date}`;
+                }).join('\n')}\n<!-- BLOG-POST-LIST:END -->\n\n---`;
+                
+                // Replace existing section or add new one
+                if (hasBlogSection) {
+                  readmeContent = readmeContent.replace(blogSectionRegex, blogSection);
                 } else {
-                  readmeContent += '\n\n' + blogSection;
+                  // Insert before the last section (Connect with Me)
+                  const connectSectionIndex = readmeContent.indexOf('## 🌐 Connect with Me');
+                  if (connectSectionIndex !== -1) {
+                    readmeContent = readmeContent.slice(0, connectSectionIndex) + 
+                                  blogSection + '\n\n' + 
+                                  readmeContent.slice(connectSectionIndex);
+                  } else {
+                    readmeContent += '\n\n' + blogSection;
+                  }
                 }
+              } else {
+                console.log('❌ No valid blog posts found - hiding section');
+                
+                if (hasBlogSection) {
+                  // Remove the blog section entirely
+                  readmeContent = readmeContent.replace(blogSectionRegex, '');
+                  
+                  // Clean up any double line breaks
+                  readmeContent = readmeContent.replace(/\n\n\n+/g, '\n\n');
+                  readmeContent = readmeContent.replace(/---\s*\n\s*---/g, '---');
+                }
+                // If no blog section exists and no valid posts, do nothing
               }
               
               fs.writeFileSync(readmePath, readmeContent);
@@ -225,10 +245,19 @@ jobs:
               execSync('git config --global user.email "action@github.com"');
               execSync('git config --global user.name "GitHub Action Backup"');
               execSync('git add README.md');
-              execSync('git commit -m "📝 Update blog posts in README (backup workflow - ' + new Date().toISOString().split('T')[0] + ')"');
+              
+              const commitMessage = hasValidPosts ? 
+                '📝 Update blog posts in README (backup workflow - ' + new Date().toISOString().split('T')[0] + ')' :
+                '🔧 Hide blog posts section - no posts available (backup workflow - ' + new Date().toISOString().split('T')[0] + ')';
+              
+              execSync(`git commit -m "${commitMessage}"`);
               execSync('git push');
               
-              console.log('✅ README updated successfully!');
+              if (hasValidPosts) {
+                console.log('✅ README updated with blog posts successfully!');
+              } else {
+                console.log('✅ README updated - blog section hidden (no valid posts)');
+              }
               
             } catch (error) {
               console.error('💥 Critical error in backup workflow:', error.message);

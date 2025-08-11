@@ -27,6 +27,32 @@ jobs:
           user_agent: "BlogPostWorkflow/1.0 (+https://github.com/gautamkrishnar/blog-post-workflow)"
           accept_header: "application/rss+xml, application/xml;q=0.9, */*;q=0.8"
           gh_token: ${{ secrets.GITHUB_TOKEN }}
+          disable_sort: false
+          filter_dates: false
+          
+      - name: Hide empty blog section
+        run: |
+          # Check if blog posts were successfully fetched
+          if grep -q "<!-- BLOG-POST-LIST:START -->" README.md; then
+            # Check if there's content between the markers
+            if ! grep -Pzo "<!-- BLOG-POST-LIST:START -->\s*\n\s*<!-- BLOG-POST-LIST:END -->" README.md > /dev/null 2>&1; then
+              echo "✅ Blog posts found - section will be visible"
+            else
+              echo "❌ No blog posts found - hiding section"
+              # Remove the entire blog posts section
+              sed -i '/## 📰 Recent Blog Posts/,/---/d' README.md
+              # Add the --- back if it was removed
+              if ! tail -n1 README.md | grep -q "^---$"; then
+                echo "---" >> README.md
+              fi
+              # Commit the change
+              git config --global user.email "action@github.com"
+              git config --global user.name "GitHub Action"
+              git add README.md
+              git commit -m "🔧 Hide empty blog posts section" || echo "No changes to commit"
+              git push || echo "Nothing to push"
+            fi
+          fi
           
       - name: Notify on failure
         if: failure()
