@@ -1,140 +1,124 @@
 name: Update README – Blog Posts (Backup)
 on:
-  schedule:
-    - cron: "0 18 * * *"  # Daily at 6 PM UTC
   workflow_dispatch:
+  schedule:
+    - cron: "30 0 * * *"  # Daily at 00:30 UTC (30 min after primary)
+
 permissions:
   contents: write
+
 jobs:
   update-readme-with-blog-backup:
     runs-on: ubuntu-latest
-    if: github.event_name == 'workflow_dispatch' || github.event_name == 'schedule'
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-        
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '20'
-          
+
       - name: Install dependencies
         run: npm install xml2js axios axios-retry
-        
-      - name: Parse RSS and update README
+
+      - name: Update README with blog posts
         run: |
-          cat > update-blog.js << 'EOF'
-          const fs = require('fs');
           const axios = require('axios');
           const axiosRetry = require('axios-retry');
           const xml2js = require('xml2js');
-          
+          const fs = require('fs');
+          const { execSync } = require('child_process');
+
           const rssUrl = 'https://debugdeploygrow.hashnode.dev/rss.xml';
           const readmePath = 'README.md';
-          
-          const client = axios.create({
-            timeout: 20000,
-            headers: {
-              'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36',
-              'Accept': 'application/rss+xml, application/xml;q=0.9, */*;q=0.8',
-              'Accept-Language': 'en-US,en;q=0.9'
-            },
-            validateStatus: () => true
-          });
 
-          axiosRetry(client, {
+          // Configure axios with retry logic
+          axiosRetry(axios, { 
             retries: 5,
-            retryCondition: (error) => {
-              const status = error.response?.status;
-              return axiosRetry.isNetworkOrIdempotentRequestError(error) || status === 429 || (status >= 500 && status < 600);
+            retryDelay: (retryCount) => {
+              const delay = Math.min(1000 * Math.pow(2, retryCount), 30000);
+              console.log(`Retry ${retryCount}: waiting ${delay}ms`);
+              return delay;
             },
-            retryDelay: (retryCount, error) => {
-              const status = error.response?.status;
-              // Honor Retry-After when 429
-              const retryAfter = error.response?.headers?.['retry-after'];
-              if (status === 429 && retryAfter) {
-                const secs = parseInt(retryAfter, 10);
-                if (!Number.isNaN(secs)) return secs * 1000;
-              }
-              return Math.min(60000, 1000 * Math.pow(2, retryCount));
+            retryCondition: (error) => {
+              return axiosRetry.isNetworkOrIdempotentRequestError(error) || 
+                     error.response?.status === 429;
             }
           });
 
           async function fetchRSS() {
-            const res = await client.get(rssUrl, { responseType: 'text' });
-            if (res.status !== 200) {
-              throw new Error(`HTTP ${res.status}`);
+            try {
+              const response = await axios.get(rssUrl, {
+                headers: {
+                  'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36',
+                  'Accept': 'application/rss+xml, application/xml;q=0.9, */*;q=0.8',
+                  'Accept-Language': 'en-US,en;q=0.9',
+                  'Cache-Control': 'no-cache'
+                },
+                timeout: 30000
+              });
+              
+              return response.data;
+            } catch (error) {
+              if (error.response?.status === 429) {
+                const retryAfter = error.response.headers['retry-after'];
+                if (retryAfter) {
+                  console.log(`Rate limited. Waiting ${retryAfter} seconds...`);
+                  await new Promise(resolve => setTimeout(resolve, retryAfter * 1000));
+                  return fetchRSS(); // Retry once more after waiting
+                }
+              }
+              throw error;
             }
-            return res.data;
           }
-          
+
           async function updateREADME() {
             try {
               console.log('Fetching RSS feed...');
               const rssData = await fetchRSS();
               
-              console.log('Parsing XML...');
               const parser = new xml2js.Parser();
               const result = await parser.parseStringPromise(rssData);
               
-              if (!result.rss || !result.rss.channel || !result.rss.channel[0].item) {
-                throw new Error('Invalid RSS format');
-              }
+              const items = result.rss.channel[0].item || [];
+              const recentPosts = items.slice(0, 5);
               
-              const items = result.rss.channel[0].item.slice(0, 5);
-              console.log(`Found ${items.length} blog posts`);
-              
-              // Read current README
               let readmeContent = fs.readFileSync(readmePath, 'utf8');
               
-              // Generate blog post list
-              let blogList = '';
-              items.forEach(item => {
-                const title = item.title[0];
-                const link = item.link[0];
-                const pubDate = new Date(item.pubDate[0]).toLocaleDateString('en-US', {
+              // Find and replace the blog posts section
+              const blogSectionRegex = /## 📝 Recent Blog Posts[\s\S]*?(?=##|$)/;
+              const blogSection = `## 📝 Recent Blog Posts\n\n${recentPosts.map(post => {
+                const title = post.title[0];
+                const url = post.link[0];
+                const date = new Date(post.pubDate[0]).toLocaleDateString('en-US', {
                   year: 'numeric',
                   month: 'short',
                   day: 'numeric'
                 });
-                blogList += `• [${title}](${link}) - ${pubDate}\n`;
-              });
+                return `• [${title}](${url}) - ${date}`;
+              }).join('\n')}\n`;
               
-              // Replace content between markers
-              const startMarker = '<!-- BLOG-POST-LIST:START -->';
-              const endMarker = '<!-- BLOG-POST-LIST:END -->';
-              
-              const startIndex = readmeContent.indexOf(startMarker);
-              const endIndex = readmeContent.indexOf(endMarker);
-              
-              if (startIndex === -1 || endIndex === -1) {
-                throw new Error('Blog post markers not found in README');
+              if (blogSectionRegex.test(readmeContent)) {
+                readmeContent = readmeContent.replace(blogSectionRegex, blogSection);
+              } else {
+                readmeContent += '\n\n' + blogSection;
               }
               
-              const beforeContent = readmeContent.substring(0, startIndex + startMarker.length);
-              const afterContent = readmeContent.substring(endIndex);
+              fs.writeFileSync(readmePath, readmeContent);
               
-              const newContent = beforeContent + '\n' + blogList + '\n' + afterContent;
+              // Commit and push changes
+              execSync('git config --global user.email "action@github.com"');
+              execSync('git config --global user.name "GitHub Action"');
+              execSync('git add README.md');
+              execSync('git commit -m "📝 Update blog posts in README (backup workflow)"');
+              execSync('git push');
               
-              // Write updated README
-              fs.writeFileSync(readmePath, newContent);
-              console.log('✅ README updated successfully');
-              
+              console.log('README updated successfully!');
             } catch (error) {
-              console.error('❌ Error:', error.message);
+              console.error('Error updating README:', error.message);
               process.exit(1);
             }
           }
-          
+
           updateREADME();
-          EOF
-          
-          node update-blog.js
-          
-      - name: Commit and push changes
-        run: |
-          git config --local user.email "action@github.com"
-          git config --local user.name "GitHub Action"
-          git add README.md
-          git diff --quiet && git diff --staged --quiet || git commit -m "📝 Update blog posts via backup workflow"
-          git push
