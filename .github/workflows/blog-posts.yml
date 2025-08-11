@@ -19,7 +19,7 @@ jobs:
         uses: gautamkrishnar/blog-post-workflow@master
         with:
           max_post_count: 5
-          feed_list: "https://debugdeploygrow.hashnode.dev/rss.xml,https://hashnode-feed-proxy.vercel.app/api/rss?url=debugdeploygrow"
+          feed_list: "https://debugdeploygrow.hashnode.dev/rss.xml"
           template: "• [$title]($url) - $newDate"
           commit_message: "📝 Update blog posts in README"
           retry_count: 8
@@ -57,5 +57,6 @@ jobs:
       - name: Notify on failure
         if: failure()
         run: |
-          echo "Primary workflow failed. Backup workflow will run in 30 minutes."
+          echo "Blog post workflow failed."
           echo "RSS URL returned 429 or other error. Check Hashnode status."
+          echo "Blog section will be hidden until RSS feed recovers."
