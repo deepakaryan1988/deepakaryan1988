@@ -13,4 +13,6 @@ jobs:
       - uses: gautamkrishnar/blog-post-workflow@v1
         with:
           max_post_count: 5
-          feed_list: "https://debugdeploygrow.hashnode.dev/rss.xml"
+          feed_list: "https://debugdeploygrow.hashnode.dev/rss.xml,https://debugdeploygrow.hashnode.dev/feed.xml"
+          retry_count: 3
+          retry_wait_time: 60
