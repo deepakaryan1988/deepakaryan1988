@@ -45,7 +45,7 @@
 
 ---
 
-## 📝 Published Articles
+## ⚡ Published Articles
 
 <!-- HASHNODE_BLOG:START -->
 1. [From Local Docker to AWS EKS: Building a Production-Grade MongoDB Architecture for FeedbackHub](https://debugdeploygrow.hashnode.dev/from-local-docker-to-aws-eks-building-a-production-grade-mongodb-architecture-for-feedbackhub)
