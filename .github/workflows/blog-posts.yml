@@ -16,11 +16,11 @@ jobs:
         run: sleep $((RANDOM % 300))  # Random delay 0-5 minutes
         
       - name: Update README with latest blog posts from Hashnode
-        uses: varunsridharan/action-hashnode-blog@v1.1.1
+        uses: Sachin-chaurasiya/hashnode-blog-action@v0.0.9
         with:
-          username: 'debugdeploygrow'
-          count: 5
-          template: '• [$title]($url) - $date'
+          HASHNODE_PUBLICATION_NAME: 'debugdeploygrow.hashnode.dev'
+          POST_COUNT: 5
+          FORMAT: 'list'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           
