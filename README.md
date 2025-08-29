@@ -55,7 +55,7 @@
 5. [🚀 Phase 3: AI-Powered Observability in FeedbackHub with AWS Bedrock](https://debugdeploygrow.hashnode.dev/phase-3-ai-powered-observability-in-feedbackhub-with-aws-bedrock)
 <!-- HASHNODE_BLOG:END -->
 
-➡️ **[Read more on debugdeploygrow.hashnode.dev](https://debugdeploygrow.hashnode.dev)**
+🚀 **[Real-world cloud architecture solutions](https://debugdeploygrow.hashnode.dev)**
 
 ---
 
