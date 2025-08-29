@@ -52,7 +52,7 @@
   <img src="https://img.shields.io/badge/Debug_Deploy_Grow-FF6B6B?style=for-the-badge&logo=rocket&logoColor=white" alt="Debug Deploy Grow"/>
 </div>
 
-> 🚀 **Fresh insights on Cloud, DevOps, AI Infrastructure & Real-world solutions** | Updated daily from [**debugdeploygrow.hashnode.dev**](https://debugdeploygrow.hashnode.dev) 
+> 🚀 **Fresh insights on Cloud, DevOps, AI Infrastructure & Real-world solutions** | Updated daily from <a href="https://debugdeploygrow.hashnode.dev" target="_blank">**debugdeploygrow.hashnode.dev**</a> 
 
 <!-- HASHNODE_BLOG:START -->
 - [From Local Docker to AWS EKS: Building a Production-Grade MongoDB Architecture for FeedbackHub](https://debugdeploygrow.hashnode.dev/from-local-docker-to-aws-eks-building-a-production-grade-mongodb-architecture-for-feedbackhub)
@@ -73,4 +73,12 @@
 
 ## 🌐 Connect with Me  
 
-[![GitHub](https://img.shields.io/badge/GitHub-181717?logo=github&logoColor=white)](https://github.com/deepakaryan1988) [![Hashnode](https://img.shields.io/badge/Blog-2962FF?logo=hashnode&logoColor=white)](https://debugdeploygrow.hashnode.dev) [![LinkedIn](https://img.shields.io/badge/LinkedIn-0A66C2?logo=linkedin&logoColor=white)](https://www.linkedin.com/in/deepakaryan1988/)
+<a href="https://github.com/deepakaryan1988">
+  <img src="https://img.shields.io/badge/GitHub-181717?logo=github&logoColor=white" alt="GitHub"/>
+</a>
+<a href="https://debugdeploygrow.hashnode.dev" target="_blank">
+  <img src="https://img.shields.io/badge/Blog-2962FF?logo=hashnode&logoColor=white" alt="Hashnode Blog"/>
+</a>
+<a href="https://www.linkedin.com/in/deepakaryan1988/" target="_blank">
+  <img src="https://img.shields.io/badge/LinkedIn-0A66C2?logo=linkedin&logoColor=white" alt="LinkedIn"/>
+</a>
