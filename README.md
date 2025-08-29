@@ -47,6 +47,12 @@
 
 ## 📰 Recent Blog Posts
 <!-- HASHNODE_BLOG:START -->
+- [From Local Docker to AWS EKS: Building a Production-Grade MongoDB Architecture for FeedbackHub](https://debugdeploygrow.hashnode.dev/from-local-docker-to-aws-eks-building-a-production-grade-mongodb-architecture-for-feedbackhub)
+- [🚀 From Zero to Pods: My Day 0 Kubernetes Journey with Minikube & Lens](https://debugdeploygrow.hashnode.dev/from-zero-to-pods-my-day-0-kubernetes-journey-with-minikube-and-lens)
+- [From Copilot to Co‑Engineer: How I Supercharged GitHub Copilot for My DevOps Projects 🚀](https://debugdeploygrow.hashnode.dev/from-copilot-to-coengineer-how-i-supercharged-github-copilot-for-my-devops-projects)
+- [FeedbackHub Under Fire: Real-World AWS Auto Scaling, Alarms, and SNS Alerts in Action](https://debugdeploygrow.hashnode.dev/feedbackhub-under-fire-real-world-aws-auto-scaling-alarms-and-sns-alerts-in-action)
+- [🚀 Phase 3: AI-Powered Observability in FeedbackHub with AWS Bedrock](https://debugdeploygrow.hashnode.dev/phase-3-ai-powered-observability-in-feedbackhub-with-aws-bedrock)
+
 <!-- HASHNODE_BLOG:END -->
 
 ---
