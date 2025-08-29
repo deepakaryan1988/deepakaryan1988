@@ -59,6 +59,6 @@
 
 ---
 
-## 🌐 Connect with Me  
+## 🤝 Connect with Me  
 
 [![GitHub](https://img.shields.io/badge/GitHub-181717?logo=github&logoColor=white)](https://github.com/deepakaryan1988) [![Hashnode](https://img.shields.io/badge/Blog-2962FF?logo=hashnode&logoColor=white)](https://debugdeploygrow.hashnode.dev) [![LinkedIn](https://img.shields.io/badge/LinkedIn-0A66C2?logo=linkedin&logoColor=white)](https://www.linkedin.com/in/deepakaryan1988/)
