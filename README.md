@@ -45,36 +45,17 @@
 
 ---
 
-<div align="center">
-
-## 📝 Featured Writing
-
-<img src="https://img.shields.io/badge/Hashnode-2962FF?style=flat&logo=hashnode&logoColor=white" alt="Hashnode"/> <img src="https://img.shields.io/badge/Debug%20Deploy%20Grow-00B4D8?style=flat&logo=rss&logoColor=white" alt="Blog"/>
-
-*Deep-dive technical content on Cloud Architecture, DevOps Engineering & AI Infrastructure*
-
-</div>
-
-<div align="left">
+## 📝 Latest from My Tech Blog
 
 <!-- HASHNODE_BLOG:START -->
-**1.** [From Local Docker to AWS EKS: Building a Production-Grade MongoDB Architecture for FeedbackHub](https://debugdeploygrow.hashnode.dev/from-local-docker-to-aws-eks-building-a-production-grade-mongodb-architecture-for-feedbackhub)
-
-**2.** [🚀 From Zero to Pods: My Day 0 Kubernetes Journey with Minikube & Lens](https://debugdeploygrow.hashnode.dev/from-zero-to-pods-my-day-0-kubernetes-journey-with-minikube-and-lens)
-
-**3.** [From Copilot to Co‑Engineer: How I Supercharged GitHub Copilot for My DevOps Projects 🚀](https://debugdeploygrow.hashnode.dev/from-copilot-to-coengineer-how-i-supercharged-github-copilot-for-my-devops-projects)
-
-**4.** [FeedbackHub Under Fire: Real-World AWS Auto Scaling, Alarms, and SNS Alerts in Action](https://debugdeploygrow.hashnode.dev/feedbackhub-under-fire-real-world-aws-auto-scaling-alarms-and-sns-alerts-in-action)
-
-**5.** [🚀 Phase 3: AI-Powered Observability in FeedbackHub with AWS Bedrock](https://debugdeploygrow.hashnode.dev/phase-3-ai-powered-observability-in-feedbackhub-with-aws-bedrock)
-
+1. [From Local Docker to AWS EKS: Building a Production-Grade MongoDB Architecture for FeedbackHub](https://debugdeploygrow.hashnode.dev/from-local-docker-to-aws-eks-building-a-production-grade-mongodb-architecture-for-feedbackhub)
+2. [🚀 From Zero to Pods: My Day 0 Kubernetes Journey with Minikube & Lens](https://debugdeploygrow.hashnode.dev/from-zero-to-pods-my-day-0-kubernetes-journey-with-minikube-and-lens)
+3. [From Copilot to Co‑Engineer: How I Supercharged GitHub Copilot for My DevOps Projects 🚀](https://debugdeploygrow.hashnode.dev/from-copilot-to-coengineer-how-i-supercharged-github-copilot-for-my-devops-projects)
+4. [FeedbackHub Under Fire: Real-World AWS Auto Scaling, Alarms, and SNS Alerts in Action](https://debugdeploygrow.hashnode.dev/feedbackhub-under-fire-real-world-aws-auto-scaling-alarms-and-sns-alerts-in-action)
+5. [🚀 Phase 3: AI-Powered Observability in FeedbackHub with AWS Bedrock](https://debugdeploygrow.hashnode.dev/phase-3-ai-powered-observability-in-feedbackhub-with-aws-bedrock)
 <!-- HASHNODE_BLOG:END -->
 
-</div>
-
-<div align="center">
-<a href="https://debugdeploygrow.hashnode.dev"><img src="https://img.shields.io/badge/View%20All%20Articles-2962FF?style=for-the-badge&logo=hashnode&logoColor=white" alt="View All Articles"/></a>
-</div>
+➡️ **[Read more on debugdeploygrow.hashnode.dev](https://debugdeploygrow.hashnode.dev)**
 
 ---
 
