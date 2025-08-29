@@ -4,7 +4,7 @@
 
 🚀 **I design, build, and scale AI-ready cloud platforms that cut infrastructure costs and accelerate product delivery.**  
 
-**Cloud & DevOps Engineer&nbsp;|&nbsp;AI-Native Infrastructure Builder&nbsp;|&nbsp;AWS • EKS • Terraform • LLMOps & AgentOps**  
+**Cloud & DevOps Architect&nbsp;|&nbsp;AI-Native Infrastructure Builder&nbsp;|&nbsp;AWS • EKS • Terraform • LLMOps & AgentOps**  
 
 <span style="color:#FF6B6B; font-weight:bold;">Ex-Drupal Architect → Cloud & DevOps Engineer → AI-Native Infrastructure Builder</span>  
 
