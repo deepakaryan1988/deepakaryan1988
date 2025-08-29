@@ -45,7 +45,15 @@
 
 ---
 
-## 📰 Recent Blog Posts
+## 📰 Latest from My Tech Blog 
+<div align="center">
+  <img src="https://img.shields.io/badge/Hashnode-2962FF?style=for-the-badge&logo=hashnode&logoColor=white" alt="Hashnode Blog"/>
+  <img src="https://img.shields.io/badge/Fresh_Content-00D4AA?style=for-the-badge&logo=rss&logoColor=white" alt="Fresh Content"/>
+  <img src="https://img.shields.io/badge/Debug_Deploy_Grow-FF6B6B?style=for-the-badge&logo=rocket&logoColor=white" alt="Debug Deploy Grow"/>
+</div>
+
+> 🚀 **Fresh insights on Cloud, DevOps, AI Infrastructure & Real-world solutions** | Updated daily from [**debugdeploygrow.hashnode.dev**](https://debugdeploygrow.hashnode.dev) 
+
 <!-- HASHNODE_BLOG:START -->
 - [From Local Docker to AWS EKS: Building a Production-Grade MongoDB Architecture for FeedbackHub](https://debugdeploygrow.hashnode.dev/from-local-docker-to-aws-eks-building-a-production-grade-mongodb-architecture-for-feedbackhub)
 - [🚀 From Zero to Pods: My Day 0 Kubernetes Journey with Minikube & Lens](https://debugdeploygrow.hashnode.dev/from-zero-to-pods-my-day-0-kubernetes-journey-with-minikube-and-lens)
@@ -54,6 +62,12 @@
 - [🚀 Phase 3: AI-Powered Observability in FeedbackHub with AWS Bedrock](https://debugdeploygrow.hashnode.dev/phase-3-ai-powered-observability-in-feedbackhub-with-aws-bedrock)
 
 <!-- HASHNODE_BLOG:END -->
+
+<div align="center">
+  <a href="https://debugdeploygrow.hashnode.dev" target="_blank">
+    <img src="https://img.shields.io/badge/📖_Read_More_Articles-2962FF?style=for-the-badge&logo=hashnode&logoColor=white" alt="Read More on Hashnode"/>
+  </a>
+</div>
 
 ---
 
