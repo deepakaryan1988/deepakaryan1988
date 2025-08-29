@@ -15,27 +15,22 @@ jobs:
       - name: Wait random delay to avoid conflicts
         run: sleep $((RANDOM % 300))  # Random delay 0-5 minutes
         
-      - name: Update README with latest blog posts
-        uses: gautamkrishnar/blog-post-workflow@master
+      - name: Update README with latest blog posts from Hashnode
+        uses: varunsridharan/action-hashnode-blog@v1.1.1
         with:
-          max_post_count: 5
-          feed_list: "https://debugdeploygrow.hashnode.dev/rss.xml"
-          template: "• [$title]($url) - $newDate"
-          commit_message: "📝 Update blog posts in README"
-          retry_count: 8
-          retry_wait_time: 300  # 5 minutes between retries
-          user_agent: "BlogPostWorkflow/1.0 (+https://github.com/gautamkrishnar/blog-post-workflow)"
-          accept_header: "application/rss+xml, application/xml;q=0.9, */*;q=0.8"
-          gh_token: ${{ secrets.GITHUB_TOKEN }}
-          disable_sort: false
-          filter_dates: false
+          username: 'debugdeploygrow'
+          count: 5
+          template: '• [$title]($url) - $date'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           
-      - name: Hide empty blog section
+      - name: Check for blog posts and handle empty section
         run: |
-          # Check if blog posts were successfully fetched
-          if grep -q "<!-- BLOG-POST-LIST:START -->" README.md; then
+          # Check if blog posts were successfully added
+          if grep -q "<!-- HASHNODE_BLOG:START -->" README.md; then
             # Check if there's content between the markers
-            if ! grep -Pzo "<!-- BLOG-POST-LIST:START -->\s*\n\s*<!-- BLOG-POST-LIST:END -->" README.md > /dev/null 2>&1; then
+            content=$(sed -n '/<!-- HASHNODE_BLOG:START -->/,/<!-- HASHNODE_BLOG:END -->/p' README.md | grep -v "<!-- HASHNODE_BLOG:" | grep -v "^$" || true)
+            if [ -n "$content" ] && [ "$content" != "" ]; then
               echo "✅ Blog posts found - section will be visible"
             else
               echo "❌ No blog posts found - hiding section"
@@ -57,6 +52,6 @@ jobs:
       - name: Notify on failure
         if: failure()
         run: |
-          echo "Blog post workflow failed."
-          echo "RSS URL returned 429 or other error. Check Hashnode status."
-          echo "Blog section will be hidden until RSS feed recovers."
+          echo "Hashnode blog workflow failed."
+          echo "Check if username 'debugdeploygrow' is correct and publication is accessible."
+          echo "Blog section will be hidden until Hashnode API recovers."
