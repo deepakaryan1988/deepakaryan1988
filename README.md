@@ -22,7 +22,7 @@
 
 ---
 
-## � Certifications & Achievements
+## 🎯 Certifications & Achievements
 
 **✅ Completed:** ![Azure AZ-900](https://img.shields.io/badge/Azure_AZ--900-0078D4?logo=microsoft-azure&logoColor=white) ![Azure AI-900](https://img.shields.io/badge/Azure_AI--900-0078D4?logo=microsoft-azure&logoColor=white) ![GitHub GHAS](https://img.shields.io/badge/GitHub_GHAS-181717?logo=github&logoColor=white) ![Google Gen AI](https://img.shields.io/badge/Google_Gen_AI-4285F4?logo=google-cloud&logoColor=white)
 
@@ -32,7 +32,7 @@
 
 ---
 
-## �🏗️ Featured Projects
+## 🏗️ Featured Projects
 
 | Project | Description | Tech Stack |
 |---------|-------------|------------|
