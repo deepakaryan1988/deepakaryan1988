@@ -33,7 +33,7 @@
 
 ---
 
-## 🗓 Recent Activity
+## � Latest Contributions
 
 <!--START_SECTION:activity-->
 1. 🗣 Commented on [#10](https://github.com//deepakaryan1988/feedbackhub-on-eks/issues/10) in [deepakaryan1988/feedbackhub-on-eks](https://github.com//deepakaryan1988/feedbackhub-on-eks)
@@ -45,7 +45,7 @@
 
 ---
 
-## 📝 Latest from My Tech Blog
+## � Published Articles
 
 <!-- HASHNODE_BLOG:START -->
 1. [From Local Docker to AWS EKS: Building a Production-Grade MongoDB Architecture for FeedbackHub](https://debugdeploygrow.hashnode.dev/from-local-docker-to-aws-eks-building-a-production-grade-mongodb-architecture-for-feedbackhub)
