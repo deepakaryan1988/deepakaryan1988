@@ -24,11 +24,19 @@
 
 ## 🎯 Certifications & Achievements
 
-**✅ Completed:** ![Azure AZ-900](https://img.shields.io/badge/Azure_AZ--900-0078D4?logo=microsoft-azure&logoColor=white) ![Azure AI-900](https://img.shields.io/badge/Azure_AI--900-0078D4?logo=microsoft-azure&logoColor=white) ![GitHub GHAS](https://img.shields.io/badge/GitHub_GHAS-181717?logo=github&logoColor=white) ![Google Gen AI](https://img.shields.io/badge/Google_Gen_AI-4285F4?logo=google-cloud&logoColor=white)
+**✅ Completed:** 
+![Azure AZ-900](https://img.shields.io/badge/Azure_AZ--900-0078D4?logo=microsoft-azure&logoColor=white) 
+![Azure AI-900](https://img.shields.io/badge/Azure_AI--900-0078D4?logo=microsoft-azure&logoColor=white) 
+![Azure AZ-104](https://img.shields.io/badge/Azure_AZ--104-0078D4?logo=microsoft-azure&logoColor=white) 
+![Azure AZ-305](https://img.shields.io/badge/Azure_AZ--305-0078D4?logo=microsoft-azure&logoColor=white) 
+![Azure AZ-500](https://img.shields.io/badge/Azure_AZ--500-0078D4?logo=microsoft-azure&logoColor=white) 
+![GitHub GHAS](https://img.shields.io/badge/GitHub_GHAS-181717?logo=github&logoColor=white) 
+![Google Gen AI](https://img.shields.io/badge/Google_Gen_AI-4285F4?logo=google-cloud&logoColor=white) 
+![Google ACE](https://img.shields.io/badge/Google_ACE-4285F4?logo=google-cloud&logoColor=white) 
 
-**🔄 In Progress:** ![GitHub Actions](https://img.shields.io/badge/GitHub_Actions-2088FF?logo=github-actions&logoColor=white) ![Google ACE](https://img.shields.io/badge/Google_ACE-4285F4?logo=google-cloud&logoColor=white) ![AWS SAA](https://img.shields.io/badge/AWS_SAA-FF9900?logo=amazon-aws&logoColor=white) ![AWS SAP](https://img.shields.io/badge/AWS_SAP-FF9900?logo=amazon-aws&logoColor=white)
+**🔄 In Progress:** ![GitHub Actions](https://img.shields.io/badge/GitHub_Actions-2088FF?logo=github-actions&logoColor=white) ![AWS SAA](https://img.shields.io/badge/AWS_SAA-FF9900?logo=amazon-aws&logoColor=white) ![AWS SAP](https://img.shields.io/badge/AWS_SAP-FF9900?logo=amazon-aws&logoColor=white)
 
-**📋 Planned:** ![Azure AZ-104](https://img.shields.io/badge/Azure_AZ--104-0078D4?logo=microsoft-azure&logoColor=white) ![Azure AZ-305](https://img.shields.io/badge/Azure_AZ--305-0078D4?logo=microsoft-azure&logoColor=white)
+**📋 Planned:**
 
 ---
 
