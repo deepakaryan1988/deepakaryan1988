@@ -24,9 +24,11 @@
 
 ## 🎯 Certifications & Achievements
 
+
 **✅ Completed:** 
 ![Azure AZ-900](https://img.shields.io/badge/Azure_AZ--900-0078D4?logo=microsoft-azure&logoColor=white) 
 ![Azure AI-900](https://img.shields.io/badge/Azure_AI--900-0078D4?logo=microsoft-azure&logoColor=white) 
+![Azure AI-102](https://img.shields.io/badge/Azure_AI--102-0078D4?logo=microsoft-azure&logoColor=white) 
 ![Azure AZ-104](https://img.shields.io/badge/Azure_AZ--104-0078D4?logo=microsoft-azure&logoColor=white) 
 ![Azure AZ-305](https://img.shields.io/badge/Azure_AZ--305-0078D4?logo=microsoft-azure&logoColor=white) 
 ![Azure AZ-500](https://img.shields.io/badge/Azure_AZ--500-0078D4?logo=microsoft-azure&logoColor=white) 
