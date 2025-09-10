@@ -38,8 +38,6 @@
 
 **🔄 In Progress:** ![GitHub Actions](https://img.shields.io/badge/GitHub_Actions-2088FF?logo=github-actions&logoColor=white) ![AWS SAA](https://img.shields.io/badge/AWS_SAA-FF9900?logo=amazon-aws&logoColor=white) ![AWS SAP](https://img.shields.io/badge/AWS_SAP-FF9900?logo=amazon-aws&logoColor=white)
 
-**📋 Planned:**
-
 ---
 
 ## 🏗️ Featured Projects
