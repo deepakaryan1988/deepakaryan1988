@@ -35,8 +35,9 @@
 ![GitHub GHAS](https://img.shields.io/badge/GitHub_GHAS-181717?logo=github&logoColor=white) 
 ![Google Gen AI](https://img.shields.io/badge/Google_Gen_AI-4285F4?logo=google-cloud&logoColor=white) 
 ![Google ACE](https://img.shields.io/badge/Google_ACE-4285F4?logo=google-cloud&logoColor=white) 
+![AWS SAP](https://img.shields.io/badge/AWS_SAP-FF9900?logo=amazon-aws&logoColor=white)
 
-**🔄 In Progress:** ![GitHub Actions](https://img.shields.io/badge/GitHub_Actions-2088FF?logo=github-actions&logoColor=white) ![AWS SAA](https://img.shields.io/badge/AWS_SAA-FF9900?logo=amazon-aws&logoColor=white) ![AWS SAP](https://img.shields.io/badge/AWS_SAP-FF9900?logo=amazon-aws&logoColor=white)
+**🔄 In Progress:** ![GitHub Actions](https://img.shields.io/badge/GitHub_Actions-2088FF?logo=github-actions&logoColor=white) ![AWS SAA](https://img.shields.io/badge/AWS_SAA-FF9900?logo=amazon-aws&logoColor=white)
 
 ---
 
